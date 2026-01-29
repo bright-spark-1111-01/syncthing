@@ -1,0 +1,136 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    <span class="fas fa-robot"></span>
+    <span translate>Agent Chat Sessions</span>
+  </h3>
+</div>
+
+<div class="modal-body">
+  <!-- Search bar -->
+  <div class="form-group">
+    <div class="input-group">
+      <input type="text" class="form-control" ng-model="searchQuery" placeholder="Search sessions..." ng-keyup="$event.keyCode == 13 && search()">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="search()">
+          <span class="fas fa-search"></span> Search
+        </button>
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div ng-if="loading" class="text-center">
+    <span class="fas fa-spinner fa-spin"></span> Loading sessions...
+  </div>
+
+  <!-- Error message -->
+  <div ng-if="error" class="alert alert-danger">
+    <span class="fas fa-exclamation-triangle"></span> {{error}}
+  </div>
+
+  <!-- Session list -->
+  <div ng-if="!loading && !selectedSession">
+    <div ng-if="sessions.length === 0" class="alert alert-info">
+      <span class="fas fa-info-circle"></span> No agent chat sessions found.
+    </div>
+
+    <div class="list-group" ng-if="sessions.length > 0">
+      <a href="#" class="list-group-item" ng-repeat="session in sessions" ng-click="viewSession(session); $event.preventDefault()">
+        <div class="row">
+          <div class="col-md-8">
+            <h4 class="list-group-item-heading">
+              {{session.title || session.id}}
+            </h4>
+            <p class="list-group-item-text text-muted">
+              <small>
+                <span class="fas fa-clock"></span> {{formatTimestamp(session.timestamp)}}
+                <span ng-if="session.metadata.branch" class="label label-info">
+                  <span class="fas fa-code-branch"></span> {{session.metadata.branch}}
+                </span>
+                <span ng-if="session.metadata.taskType" class="label label-primary">
+                  {{session.metadata.taskType}}
+                </span>
+                <span ng-if="session.metadata.status" class="label label-{{getStatusClass(session.metadata.status)}}">
+                  {{session.metadata.status}}
+                </span>
+              </small>
+            </p>
+          </div>
+          <div class="col-md-4 text-right">
+            <button class="btn btn-danger btn-sm" ng-click="deleteSession(session.id); $event.preventDefault(); $event.stopPropagation()">
+              <span class="fas fa-trash"></span> Delete
+            </button>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Session details view -->
+  <div ng-if="selectedSession">
+    <button class="btn btn-default btn-sm" ng-click="closeSessionDetails()">
+      <span class="fas fa-arrow-left"></span> Back to List
+    </button>
+    <hr>
+
+    <h4>{{selectedSession.title || selectedSession.id}}</h4>
+
+    <dl class="dl-horizontal">
+      <dt>Session ID</dt>
+      <dd>{{selectedSession.id}}</dd>
+
+      <dt>Timestamp</dt>
+      <dd>{{formatTimestamp(selectedSession.timestamp)}}</dd>
+
+      <dt ng-if="selectedSession.metadata.branch">Branch</dt>
+      <dd ng-if="selectedSession.metadata.branch">{{selectedSession.metadata.branch}}</dd>
+
+      <dt ng-if="selectedSession.metadata.repository">Repository</dt>
+      <dd ng-if="selectedSession.metadata.repository">{{selectedSession.metadata.repository}}</dd>
+
+      <dt ng-if="selectedSession.metadata.author">Author</dt>
+      <dd ng-if="selectedSession.metadata.author">{{selectedSession.metadata.author}}</dd>
+
+      <dt ng-if="selectedSession.metadata.taskType">Task Type</dt>
+      <dd ng-if="selectedSession.metadata.taskType">{{selectedSession.metadata.taskType}}</dd>
+
+      <dt ng-if="selectedSession.metadata.status">Status</dt>
+      <dd ng-if="selectedSession.metadata.status">
+        <span class="label label-{{getStatusClass(selectedSession.metadata.status)}}">
+          {{selectedSession.metadata.status}}
+        </span>
+      </dd>
+
+      <dt ng-if="selectedSession.metadata.tags && selectedSession.metadata.tags.length > 0">Tags</dt>
+      <dd ng-if="selectedSession.metadata.tags && selectedSession.metadata.tags.length > 0">
+        <span class="label label-info" ng-repeat="tag in selectedSession.metadata.tags">{{tag}}</span>
+      </dd>
+    </dl>
+
+    <h5 ng-if="selectedSession.messages && selectedSession.messages.length > 0">
+      <span class="fas fa-comments"></span> Messages ({{selectedSession.messages.length}})
+    </h5>
+
+    <div ng-if="selectedSession.messages && selectedSession.messages.length > 0" class="panel-group">
+      <div class="panel" ng-class="{'panel-info': message.role === 'user', 'panel-default': message.role === 'assistant'}" ng-repeat="message in selectedSession.messages">
+        <div class="panel-heading">
+          <span class="fas" ng-class="{'fa-user': message.role === 'user', 'fa-robot': message.role === 'assistant'}"></span>
+          <strong>{{message.role}}</strong>
+          <small class="pull-right text-muted">{{formatTimestamp(message.timestamp)}}</small>
+        </div>
+        <div class="panel-body">
+          <pre style="white-space: pre-wrap; background: none; border: none;">{{message.content}}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="loadSessions()" ng-if="!selectedSession">
+    <span class="fas fa-sync"></span> Refresh
+  </button>
+  <button type="button" class="btn btn-default" ng-click="$dismiss()">
+    <span translate>Close</span>
+  </button>
+</div>
