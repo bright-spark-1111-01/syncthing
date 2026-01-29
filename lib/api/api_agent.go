@@ -18,7 +18,7 @@ import (
 func (s *service) getAgentSessions(w http.ResponseWriter, r *http.Request) {
 query := r.URL.Query().Get("query")
 
-mgr := agent.NewManager(s.miscDB)
+mgr := s.agentMgr
 
 var sessions []*agent.Session
 var err error
@@ -47,7 +47,7 @@ http.Error(w, "session ID is required", http.StatusBadRequest)
 return
 }
 
-mgr := agent.NewManager(s.miscDB)
+mgr := s.agentMgr
 session, err := mgr.GetSession(sessionID)
 if err != nil {
 http.Error(w, err.Error(), http.StatusNotFound)
@@ -71,7 +71,7 @@ http.Error(w, "session ID is required", http.StatusBadRequest)
 return
 }
 
-mgr := agent.NewManager(s.miscDB)
+mgr := s.agentMgr
 if err := mgr.SaveSession(&session); err != nil {
 http.Error(w, err.Error(), http.StatusInternalServerError)
 return
@@ -93,7 +93,7 @@ http.Error(w, "session ID is required", http.StatusBadRequest)
 return
 }
 
-mgr := agent.NewManager(s.miscDB)
+mgr := s.agentMgr
 if err := mgr.DeleteSession(sessionID); err != nil {
 http.Error(w, err.Error(), http.StatusInternalServerError)
 return

@@ -22,29 +22,50 @@ sessionListKey   = "agentsessions:list"
 )
 
 // Session represents a GitHub Copilot agent chat session
+// Session represents a GitHub Copilot agent chat session containing
+// chat messages, metadata, and timestamps for tracking AI interactions.
 type Session struct {
+// ID is the unique identifier for the session
 ID        string    `json:"id"`
+// Timestamp is when the session was created or last modified
 Timestamp time.Time `json:"timestamp"`
+// Title is a human-readable description of the session
 Title     string    `json:"title"`
+// Messages contains the conversation between user and assistant
 Messages  []Message `json:"messages,omitempty"`
+// Metadata contains additional information about the session
 Metadata  Metadata  `json:"metadata,omitempty"`
 }
 
 // Message represents a single message in a chat session
+// Message represents a single message in a chat session with
+// role, content, and timestamp information.
 type Message struct {
-Role      string    `json:"role"`      // "user" or "assistant"
+// Role is either "user" or "assistant"
+Role      string    `json:"role"`
+// Content is the text content of the message
 Content   string    `json:"content"`
+// Timestamp is when the session was created or last modified
 Timestamp time.Time `json:"timestamp"`
 }
 
 // Metadata contains additional information about the session
+// Metadata contains additional contextual information about a session
+// including repository details, task categorization, and custom data.
 type Metadata struct {
+// Branch is the git branch associated with the session
 Branch      string            `json:"branch,omitempty"`
+// Repository is the full repository name (e.g., "owner/repo")
 Repository  string            `json:"repository,omitempty"`
+// Author is the user or agent that created the session
 Author      string            `json:"author,omitempty"`
+// TaskType categorizes the type of work (e.g., "bugfix", "feature")
 TaskType    string            `json:"taskType,omitempty"`
+// Status indicates the current state (e.g., "completed", "in_progress")
 Status      string            `json:"status,omitempty"`
+// Tags are keywords for categorization and searching
 Tags        []string          `json:"tags,omitempty"`
+// CustomData allows storing arbitrary key-value pairs
 CustomData  map[string]string `json:"customData,omitempty"`
 }
 

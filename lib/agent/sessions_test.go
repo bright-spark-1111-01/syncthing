@@ -8,6 +8,7 @@ package agent
 
 import (
 "testing"
+"strconv"
 "time"
 
 "github.com/syncthing/syncthing/internal/db"
@@ -94,8 +95,8 @@ mgr := NewManager(typed)
 // Save multiple sessions
 for i := 1; i <= 3; i++ {
 session := &Session{
-ID:        "session-" + string(rune('0'+i)),
-Title:     "Session " + string(rune('0'+i)),
+ID:        "session-" + strconv.Itoa(i),
+Title:     "Session " + strconv.Itoa(i),
 Timestamp: time.Now().Add(time.Duration(i) * time.Minute),
 }
 if err := mgr.SaveSession(session); err != nil {

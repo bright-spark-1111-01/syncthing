@@ -44,6 +44,7 @@ import (
 
 	"github.com/syncthing/syncthing/internal/db"
 	"github.com/syncthing/syncthing/internal/slogutil"
+	"github.com/syncthing/syncthing/lib/agent"
 	"github.com/syncthing/syncthing/lib/build"
 	"github.com/syncthing/syncthing/lib/config"
 	"github.com/syncthing/syncthing/lib/connections"
@@ -95,6 +96,7 @@ type service struct {
 	miscDB               *db.Typed
 	shutdownTimeout      time.Duration
 
+	agentMgr     *agent.Manager
 	guiErrors slogutil.Recorder
 	systemLog slogutil.Recorder
 }
@@ -130,6 +132,7 @@ func New(id protocol.DeviceID, cfg config.Wrapper, assetDir, tlsDefaultCommonNam
 		startedOnce:          make(chan struct{}),
 		exitChan:             make(chan *svcutil.FatalErr, 1),
 		miscDB:               miscDB,
+		agentMgr:             agent.NewManager(miscDB),
 		shutdownTimeout:      100 * time.Millisecond,
 	}
 }
