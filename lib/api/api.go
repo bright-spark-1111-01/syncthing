@@ -284,6 +284,8 @@ func (s *service) Serve(ctx context.Context) error {
 	restMux.HandlerFunc(http.MethodGet, "/rest/system/loglevels", s.getSystemDebug)           // -
 	restMux.HandlerFunc(http.MethodGet, "/rest/system/log", s.getSystemLog)                   // [since]
 	restMux.HandlerFunc(http.MethodGet, "/rest/system/log.txt", s.getSystemLogTxt)            // [since]
+	restMux.HandlerFunc(http.MethodGet, "/rest/agent/sessions", s.getAgentSessions)           // [query]
+	restMux.Handler(http.MethodGet, "/rest/agent/sessions/:id", http.HandlerFunc(s.getAgentSession))
 
 	// The POST handlers
 	restMux.HandlerFunc(http.MethodPost, "/rest/db/prio", s.postDBPrio)                          // folder file
@@ -302,10 +304,12 @@ func (s *service) Serve(ctx context.Context) error {
 	restMux.HandlerFunc(http.MethodPost, "/rest/system/pause", s.makeDevicePauseHandler(true))   // [device]
 	restMux.HandlerFunc(http.MethodPost, "/rest/system/resume", s.makeDevicePauseHandler(false)) // [device]
 	restMux.HandlerFunc(http.MethodPost, "/rest/system/loglevels", s.postSystemDebug)            // [enable] [disable]
+	restMux.HandlerFunc(http.MethodPost, "/rest/agent/sessions", s.postAgentSession)             // <body>
 
 	// The DELETE handlers
 	restMux.HandlerFunc(http.MethodDelete, "/rest/cluster/pending/devices", s.deletePendingDevices) // device
 	restMux.HandlerFunc(http.MethodDelete, "/rest/cluster/pending/folders", s.deletePendingFolders) // folder [device]
+	restMux.Handler(http.MethodDelete, "/rest/agent/sessions/:id", http.HandlerFunc(s.deleteAgentSession))
 
 	// Config endpoints
 
