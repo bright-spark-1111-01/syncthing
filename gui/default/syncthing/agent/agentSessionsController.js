@@ -43,7 +43,7 @@ angular.module('syncthing.core')
                 return;
             }
 
-            $http.delete('rest/agent/sessions/' + sessionId)
+            $http.delete('rest/agent/sessions/' + encodeURIComponent(sessionId))
                 .then(function () {
                     $scope.loadSessions();
                     if ($scope.selectedSession && $scope.selectedSession.id === sessionId) {

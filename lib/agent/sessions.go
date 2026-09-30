@@ -11,6 +11,7 @@ import (
 "fmt"
 "sort"
 "strings"
+"sync"
 "time"
 
 "github.com/syncthing/syncthing/internal/db"
@@ -71,7 +72,8 @@ CustomData  map[string]string `json:"customData,omitempty"`
 
 // Manager handles storage and retrieval of agent chat sessions
 type Manager struct {
-db *db.Typed
+db      *db.Typed
+listMut sync.Mutex
 }
 
 // NewManager creates a new session manager
@@ -230,6 +232,9 @@ return false
 
 // addToSessionList adds a session ID to the master list
 func (m *Manager) addToSessionList(id string) error {
+m.listMut.Lock()
+defer m.listMut.Unlock()
+
 sessionIDs, err := m.getSessionList()
 if err != nil {
 return err
@@ -248,6 +253,9 @@ return m.saveSessionList(sessionIDs)
 
 // removeFromSessionList removes a session ID from the master list
 func (m *Manager) removeFromSessionList(id string) error {
+m.listMut.Lock()
+defer m.listMut.Unlock()
+
 sessionIDs, err := m.getSessionList()
 if err != nil {
 return err

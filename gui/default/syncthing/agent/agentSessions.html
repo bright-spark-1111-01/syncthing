@@ -1,11 +1,12 @@
-<div class="modal-header">
-  <h3 class="modal-title">
-    <span class="fas fa-robot"></span>
-    <span translate>Agent Chat Sessions</span>
-  </h3>
-</div>
+<div ng-controller="AgentSessionsController">
+  <div class="modal-header">
+    <h3 class="modal-title">
+      <span class="fas fa-robot"></span>
+      <span translate>Agent Chat Sessions</span>
+    </h3>
+  </div>
 
-<div class="modal-body" ng-controller="AgentSessionsController">
+  <div class="modal-body">
   <!-- Search bar -->
   <div class="form-group">
     <div class="input-group">
@@ -124,13 +125,14 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
 
-<div class="modal-footer">
-  <button type="button" class="btn btn-primary" ng-click="loadSessions()" ng-if="!selectedSession">
-    <span class="fas fa-sync"></span> Refresh
-  </button>
-  <button type="button" class="btn btn-default" ng-click="$dismiss()">
-    <span translate>Close</span>
-  </button>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="loadSessions()" ng-if="!selectedSession">
+      <span class="fas fa-sync"></span> Refresh
+    </button>
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">
+      <span translate>Close</span>
+    </button>
+  </div>
 </div>
