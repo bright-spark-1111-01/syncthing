@@ -118,6 +118,8 @@
               <li><a href="" ng-click="showSettings()"><span class="fa fa-fw fa-cog"></span>&nbsp;<span translate>Settings</span></a></li>
               <li><a href="" ng-click="advanced()"><span class="fa fa-fw fa-cogs"></span>&nbsp;<span translate>Advanced</span></a></li>
               <li class="divider" aria-hidden="true"></li>
+              <li><a href="#" data-toggle="modal" data-target="#agentSessions"><span class="fa fa-fw fa-robot"></span>&nbsp;<span translate>Agent Sessions</span></a></li>
+              <li class="divider" aria-hidden="true"></li>
               <li><a href="" ng-click="showDeviceIdentification(thisDevice())"><span class="fa fa-fw fa-qrcode"></span>&nbsp;<span translate>Show ID</span></a></li>
               <li><a href="" ng-click="logging.show()"><span class="fa fa-fw fa-wrench"></span>&nbsp;<span translate>Logs</span></a></li>
               <li><a href="/rest/debug/support" target="_blank"><span class="fa fa-fw fa-user-md"></span>&nbsp;<span translate>Support Bundle</span></a></li>
@@ -1017,6 +1019,7 @@
   <ng-include src="'syncthing/settings/settingsModalView.html'"></ng-include>
   <ng-include src="'syncthing/settings/advancedSettingsModalView.html'"></ng-include>
   <ng-include src="'syncthing/settings/discardChangesConfirmation.html'"></ng-include>
+  <ng-include src="'syncthing/agent/agentSessionsModalView.html'"></ng-include>
   <ng-include src="'syncthing/usagereport/usageReportModalView.html'"></ng-include>
   <ng-include src="'syncthing/usagereport/usageReportPreviewModalView.html'"></ng-include>
   <ng-include src="'syncthing/transfer/neededFilesModalView.html'"></ng-include>
@@ -1065,6 +1068,7 @@
   <script type="text/javascript" src="syncthing/core/pathIsSubDirDirective.js"></script>
   <script type="text/javascript" src="syncthing/core/popoverDirective.js"></script>
   <script type="text/javascript" src="syncthing/core/syncthingController.js"></script>
+  <script type="text/javascript" src="syncthing/agent/agentSessionsController.js"></script>
   <script type="text/javascript" src="syncthing/core/tooltipDirective.js"></script>
   <script type="text/javascript" src="syncthing/core/uncamelFilter.js"></script>
   <script type="text/javascript" src="syncthing/core/uniqueFolderDirective.js"></script>
