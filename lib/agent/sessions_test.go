@@ -7,8 +7,9 @@
 package agent
 
 import (
-"testing"
 "strconv"
+"sync"
+"testing"
 "time"
 
 "github.com/syncthing/syncthing/internal/db"
@@ -275,4 +276,43 @@ err = mgr.SaveSession(session)
 if err == nil {
 t.Error("Expected error when saving session with empty ID, got nil")
 }
+}
+
+func TestConcurrentSaveSessions(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	ldb, err := sqlite.Open(tmpDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer ldb.Close()
+
+	mgr := NewManager(db.NewMiscDB(ldb))
+	const count = 20
+	var wg sync.WaitGroup
+	errs := make(chan error, count)
+
+	for i := 0; i < count; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			errs <- mgr.SaveSession(&Session{ID: "concurrent-" + strconv.Itoa(i)})
+		}(i)
+	}
+	wg.Wait()
+	close(errs)
+
+	for err := range errs {
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	sessions, err := mgr.ListSessions()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(sessions) != count {
+		t.Fatalf("expected %d sessions, got %d", count, len(sessions))
+	}
 }
